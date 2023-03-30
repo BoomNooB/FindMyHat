@@ -11,9 +11,32 @@ class Field {
         this.currentX = 0;
         this.currentY = 0;
         this.selectWay = '';
+        this.charY=[];
+        this.charX=[];
+        this.mode = '';
+        this.xAxis = 0;
+        this.yAxis = 0;
+        this.holePercent = 0;
     }
-    get field(){
-        return this._field
+
+    modeSelection(){
+        this.mode = prompt(`Which MAP TYPE do you want to select
+Type 1 to select default map
+Type 2 to select random map
+`)
+
+        switch(this.mode){
+            case '1':
+                this.printCurrentMap();
+                break;
+            case '2':
+                this.randomMap();
+                break;
+            default:
+                console.log("Please type Again in CORRECT format");
+                this.modeSelection();
+        }
+
     }
 
     printCurrentMap(){
@@ -57,8 +80,8 @@ class Field {
                     }
                 }
             }
-        console.log(`x = ${x}\ny = ${y}`);
-        
+        this.charX = x;
+        this.charY = y;
     }
 
     goUp(){
@@ -104,7 +127,7 @@ class Field {
         let y = this._field[0].length - 1;
         // เช็คตกแมพ
         if(this.currentX>x || this.currentY>y ||this.currentY<0 || this.currentX<0){
-            console.log(`You are fall from the map ,lol`)
+            console.log(`You are out of the map ,lol`)
             return this.endGame();
         //เช็คตกหลุม
         } else if(this._field[this.currentX][this.currentY] === 'O'){
@@ -112,11 +135,52 @@ class Field {
             return this.endGame();
         //เช็คชนะ
         } else if(this._field[this.currentX][this.currentY] === '^'){
-            console.log(`Congratulations ! , You've reached the hat`);
+            console.log(`Congratulations ! , You've reached your hat`);
             return this.endGame();
         } else {
             console.log(`Nicely done,Go on!`);
         }
+    }
+
+    randomMap(){
+        console.log('ALL INPUT MUST BE A NUMBER , Column and Row should be more 3 or more')
+        let x  = parseInt(prompt(`Please enter how long of column axis:`))
+        let y  = parseInt(prompt(`Please enter how long of row axis:`))
+        let hole  = parseInt(prompt(`Please enter how much of hole you wish to in percentage(1-100):`))
+        if(isNaN(x) || isNaN(y)||isNaN(hole)||x<3||y<3){
+            console.log(`You've entered in WRONG FORMAT , please try again`)
+            return this.randomMap();
+        }
+        x = Math.ceil(x);
+        y = Math.ceil(y);
+        hole = Math.ceil(hole);
+        
+        //ได้ค่ากว้างที่สุดของแมปมา === x,y 
+        //ใส่ที่ว่างกับข้อมูลลงไปในแมป
+        // let i = 0;
+        // let j = 0;
+        this._field = [...Array(y)].map(e => Array(x).fill('░'));
+        //add star character
+        this._field[0][0] = '*';
+        //add holes
+        let totalHole = (x*y)/100*hole;
+        totalHole = Math.ceil(totalHole);
+        for(let k = 0; k < totalHole; k++){
+            const i = Math.floor(Math.random() * this._field.length);
+            const j = Math.floor(Math.random() * this._field[0].length);
+            if(this._field[i][j] !== 'O' && this._field[i][j] !== '*'){
+                this._field[i][j] = 'O';                
+            } else {
+                k--;
+            }
+        }
+        //add hat to random position
+        
+        this.findCurrentChar('░')
+        //find where empty locate 
+        let randomHat = Math.floor(Math.random()*this.charX.length);
+        this._field[this.charX[randomHat]][this.charY[randomHat]] = '^';
+        this.printCurrentMap();
     }
 
     endGame(){
@@ -133,5 +197,4 @@ const myField = new Field([
   ]);
   
 console.log(`u is up\nd is down\nr is right\nl is left`)
-// myField.gameLogicCheck();
-myField.printCurrentMap();
+myField.modeSelection();

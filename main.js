@@ -1,4 +1,5 @@
 const prompt = require('prompt-sync')({sigint: true});
+const clear = require('clear-screen')
 
 const hat = '^';
 const hole = 'O';
@@ -82,6 +83,7 @@ Type 2 to select random map
     }
 
     goUp(){
+        clear();
         console.log(`\nGo Up`);
         this.currentX--;
         this.gameLogicCheck();
@@ -89,6 +91,7 @@ Type 2 to select random map
         this.printCurrentMap();
     }
     goDown(){
+        clear();
         //it's gonna be in format of [i][j] 
         // i === แนวนอน === x
         // j === แนวตั้ง  === y
@@ -100,6 +103,7 @@ Type 2 to select random map
         this.printCurrentMap();
     }
     goLeft(){
+        clear();
         //it's gonna be in format of [i][j] 
         // i === แนวนอน === x
         // j === แนวตั้ง  === y
@@ -111,6 +115,7 @@ Type 2 to select random map
         this.printCurrentMap();
     }
     goRight(){
+        clear();
         console.log(`\nGo Right`);
         this.currentY++;
         this.gameLogicCheck();
@@ -140,6 +145,7 @@ Type 2 to select random map
     }
 
     randomMap(){
+        clear();
         console.log('ALL INPUT MUST BE A NUMBER , Column and Row should be more 3 or more')
         let x  = parseInt(prompt(`Please enter how long of column axis:`))
         let y  = parseInt(prompt(`Please enter how long of row axis:`))
@@ -197,9 +203,9 @@ Type : Anything or whatever if you want to start at upper-left
             //find where empty locate 
             let randomStar = Math.floor(Math.random()*this.charX.length);
             this._field[this.charX[randomStar]][this.charY[randomStar]] = '*';
-            this.printCurrentMap();
             this.currentX = this.charX[randomStar];
             this.currentY = this.charY[randomStar];
+            this.printCurrentMap();
         } else {
             this.printCurrentMap();
         }
